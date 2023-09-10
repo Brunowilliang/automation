@@ -1,0 +1,27 @@
+/.vscode/
+.idea
+
+.github
+
+node_modules
+# Keep environment variables out of version control
+.env
+dist
+teste
+# data
+
+.DS_Store
+
+# goreleaser builds folder
+/.builds/
+
+# tests coverage
+coverage.out
+
+# plaintask todo files
+*.todo
+
+# generated markdown previews
+README.html
+CHANGELOG.html
+LICENSE.html

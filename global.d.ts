@@ -1,0 +1,5 @@
+declare module 'm3u8-parser'
+declare module 'link-check'
+declare module 'cli-progress'
+declare module 'async'
+declare module 'name-to-imdb'

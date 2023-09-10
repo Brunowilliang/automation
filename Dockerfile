@@ -42,17 +42,14 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     wget
 
+# Definir o diretório de trabalho (isso criará o diretório /app se ele não existir)
+WORKDIR /app
+
 # Adicionar um usuário não-root para executar o Puppeteer
 RUN groupadd -r puppeteer && useradd -r -g puppeteer -G audio,video puppeteer \
     && mkdir -p /home/puppeteer/Downloads \
     && chown -R puppeteer:puppeteer /home/puppeteer \
     && chown -R puppeteer:puppeteer /app
-
-# Mudar para o usuário 'puppeteer' 
-USER puppeteer
-
-# Definir o diretório de trabalho
-WORKDIR /app
 
 # Copiar o package.json e package-lock.json (se disponível)
 COPY package*.json ./
@@ -62,6 +59,9 @@ RUN npm install
 
 # Copiar o restante dos arquivos do projeto
 COPY . .
+
+# Mudar para o usuário 'puppeteer' 
+USER puppeteer
 
 # Comando para executar o script
 CMD ["npm", "run", "script"]

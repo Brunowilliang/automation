@@ -1,3 +1,11 @@
+my app (folder Aplication)
+  - node_modules
+  - src
+    - script.ts 
+  - .gitignore
+  - package.json
+
+my script.ts
 import puppeteer, { Browser } from 'puppeteer'
 import nodemailer from 'nodemailer'
 import dotenv from 'dotenv'
@@ -75,14 +83,59 @@ async function watchMovie() {
   await browser.close()
 }
 
-// const ONE_MINUTE = 1000 * 60
-
-// function runAndSchedule() {
-//   watchMovie().then(() => {
-//     setTimeout(runAndSchedule, ONE_MINUTE)
-//   })
-// }
-
-// runAndSchedule()
-
 watchMovie()
+
+
+my .env
+EMAIL_USER=bwgautomation@gmail.com
+EMAIL_PASS=moeupzyvtzwkoqpl
+
+
+my package.json
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": "18"
+  },
+  "scripts": {
+    "script": "ts-node src/script.ts",
+    "lint": "eslint src --ext .ts --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@flydotio/dockerfile": "^0.3.3",
+    "@rocketseat/eslint-config": "^1.2.0",
+    "@types/node": "^20.1.5",
+    "@types/nodemailer": "^6.4.9",
+    "dotenv": "^16.3.1",
+    "eslint": "^8.40.0",
+    "prisma": "^5.1.1",
+    "tsup": "^7.1.0",
+    "tsx": "^3.12.7",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@fastify/cors": "^8.2.1",
+    "@fastify/jwt": "^6.7.1",
+    "@fastify/multipart": "^7.6.0",
+    "@fastify/static": "^6.10.1",
+    "@prisma/client": "^5.1.1",
+    "async": "^3.2.4",
+    "axios": "^1.4.0",
+    "cli-progress": "^3.12.0",
+    "fastify": "^4.17.0",
+    "iptv-playlist-parser": "^0.12.2",
+    "link-check": "^5.2.0",
+    "m3u8-parser": "^7.0.0",
+    "name-to-imdb": "^3.0.4",
+    "nodemailer": "^6.9.5",
+    "puppeteer": "^20.9.0",
+    "ts-node": "^10.9.1",
+    "zod": "^3.21.4"
+  }
+}

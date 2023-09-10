@@ -18,7 +18,7 @@
     "@rocketseat/eslint-config": "^1.2.0",
     "@types/node": "^20.1.5",
     "@types/nodemailer": "^6.4.9",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "eslint": "^8.40.0",
     "prisma": "^5.1.1",
     "tsup": "^7.1.0",

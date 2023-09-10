@@ -1,4 +1,4 @@
-import puppeteer, { Browser } from 'puppeteer'
+import puppeteer, { Browser, Page } from 'puppeteer'
 import nodemailer from 'nodemailer'
 import dotenv from 'dotenv'
 
@@ -23,80 +23,59 @@ async function sendErrorEmail(error: Error) {
     text: `Ocorreu um erro no script: ${error.message}`,
   }
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log('Erro ao enviar o e-mail:', error.message)
-    } else {
-      console.log('E-mail enviado:', info.response)
-    }
-  })
+  try {
+    const info = await transporter.sendMail(mailOptions)
+    console.log('E-mail enviado:', info.response)
+  } catch (error: any) {
+    console.log('Erro ao enviar o e-mail:', error.message)
+  }
 }
 
 async function watchMovie() {
-  // const browser: Browser = await puppeteer.launch({ headless: false })
-  const browser: Browser = await puppeteer.launch({
-    headless: 'new',
-    executablePath: puppeteer.executablePath(),
-    args: [
-      '--disable-setuid-sandbox',
-      '--no-sandbox',
-      '--single-process',
-      '--no-zygote',
-    ],
-  })
+  let browser: Browser | null = null
 
-  for (let i = 0; i < 5; i++) {
-    console.log(`Iniciando iteração ${i + 1}`)
+  try {
+    browser = await puppeteer.launch({
+      // headless: false,
+      headless: true,
+      args: [
+        '--disable-setuid-sandbox',
+        '--no-sandbox',
+        '--disable-dev-shm-usage',
+        '--single-process',
+      ],
+    })
 
-    try {
-      // const page = await browser.newPage()
-      // await page.goto('https://www.cineflix.app/')
-
+    for (let i = 0; i < 5; i++) {
+      console.log(`Iniciando iteração ${i + 1}`)
       const page = await browser.newPage()
-      await page.goto('https://www.cineflix.app/')
-      await page.waitForNavigation({ waitUntil: 'load' })
-
-      // Esperar a página carregar por 5 segundos
-      await new Promise((resolve) => setTimeout(resolve, 5000))
-
-      // Calcula o ponto central e clica
-      const width = page.viewport()?.width || 800
-      const height = page.viewport()?.height || 600
-      await page.mouse.click(width / 2, height / 2)
-
-      // Esperar que o anúncio seja carregado
-      console.log(`Esperando anúncio ser carregado: ${i + 1}`)
-      await new Promise((resolve) => setTimeout(resolve, 5000))
-
-      // Fecha todas as páginas
-      const pages = await browser.pages()
-      for (const pg of pages) {
-        await pg.close()
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(`Erro na iteração ${i + 1}:`, error.message)
-        await sendErrorEmail(error)
-      } else {
-        console.error(`Erro desconhecido na iteração ${i + 1}:`, error)
-      }
-      await browser.close()
-      return // interrompe o loop e a execução do script
+      await navigateAndInteract(page)
+      await page.close()
     }
-  }
 
-  console.log('Todas as 5 iterações completas')
-  await browser.close()
+    console.log('Todas as 5 iterações completas')
+  } catch (error: any) {
+    console.error('Erro durante a execução:', error.message)
+    await sendErrorEmail(error)
+  } finally {
+    if (browser) await browser.close()
+  }
 }
 
-// const ONE_MINUTE = 1000 * 60
+async function navigateAndInteract(page: Page) {
+  await page.goto('https://www.cineflix.app/', { waitUntil: 'networkidle2' })
 
-// function runAndSchedule() {
-//   watchMovie().then(() => {
-//     setTimeout(runAndSchedule, ONE_MINUTE)
-//   })
-// }
+  // Calcula o ponto central e clica
+  const width = page.viewport()?.width || 800
+  const height = page.viewport()?.height || 600
+  await page.mouse.click(width / 2, height / 2)
 
-// runAndSchedule()
+  // Aguarda a tela de anúncio ser carregada
+  // await page.waitForNavigation({ waitUntil: 'networkidle2' })
+
+  // Esperar que o anúncio seja carregado
+  console.log('Esperando anúncio ser carregado')
+  await new Promise((resolve) => setTimeout(resolve, 5000))
+}
 
 watchMovie()

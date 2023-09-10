@@ -34,21 +34,9 @@ async function sendErrorEmail(error: Error) {
 
 async function watchMovie() {
   // const browser: Browser = await puppeteer.launch({ headless: false })
-  // const browser: Browser = await puppeteer.launch({
-  //   headless: 'new',
-  //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  // })
-  // const browser: Browser = await puppeteer.launch({
-  //   headless: 'new',
-  //   executablePath: puppeteer.executablePath(),
-  //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  // })
   const browser: Browser = await puppeteer.launch({
     headless: 'new',
-    executablePath:
-      process.env.NODE_ENV === 'production'
-        ? process.env.PUPPETEER_EXECUTABLE_PATH
-        : puppeteer.executablePath(),
+    executablePath: puppeteer.executablePath(),
     args: [
       '--disable-setuid-sandbox',
       '--no-sandbox',
@@ -61,8 +49,12 @@ async function watchMovie() {
     console.log(`Iniciando iteração ${i + 1}`)
 
     try {
+      // const page = await browser.newPage()
+      // await page.goto('https://www.cineflix.app/')
+
       const page = await browser.newPage()
       await page.goto('https://www.cineflix.app/')
+      await page.waitForNavigation({ waitUntil: 'load' })
 
       // Esperar a página carregar por 5 segundos
       await new Promise((resolve) => setTimeout(resolve, 5000))

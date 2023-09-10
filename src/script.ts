@@ -34,8 +34,13 @@ async function sendErrorEmail(error: Error) {
 
 async function watchMovie() {
   // const browser: Browser = await puppeteer.launch({ headless: false })
+  // const browser: Browser = await puppeteer.launch({
+  //   headless: 'new',
+  //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  // })
   const browser: Browser = await puppeteer.launch({
-    headless: true,
+    headless: 'new',
+    executablePath: puppeteer.executablePath(),
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   })
 

@@ -1,6 +1,7 @@
+# Usar a imagem oficial do Node.js 18
 FROM node:18
 
-# Instala as dependências do Puppeteer
+# Instalar as dependências necessárias para o Puppeteer
 RUN apt-get update && apt-get install -y \
     gconf-service \
     libasound2 \
@@ -41,11 +42,26 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     wget
 
+# Adicionar um usuário não-root para executar o Puppeteer
+RUN groupadd -r puppeteer && useradd -r -g puppeteer -G audio,video puppeteer \
+    && mkdir -p /home/puppeteer/Downloads \
+    && chown -R puppeteer:puppeteer /home/puppeteer \
+    && chown -R puppeteer:puppeteer /app
+
+# Mudar para o usuário 'puppeteer' 
+USER puppeteer
+
+# Definir o diretório de trabalho
 WORKDIR /app
 
+# Copiar o package.json e package-lock.json (se disponível)
 COPY package*.json ./
+
+# Instalar as dependências do projeto
 RUN npm install
 
+# Copiar o restante dos arquivos do projeto
 COPY . .
 
+# Comando para executar o script
 CMD ["npm", "run", "script"]

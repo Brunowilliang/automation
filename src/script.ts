@@ -33,7 +33,11 @@ async function sendErrorEmail(error: Error) {
 }
 
 async function watchMovie() {
-  const browser: Browser = await puppeteer.launch({ headless: false })
+  // const browser: Browser = await puppeteer.launch({ headless: false })
+  const browser: Browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  })
 
   for (let i = 0; i < 5; i++) {
     console.log(`Iniciando iteração ${i + 1}`)

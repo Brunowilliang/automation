@@ -38,10 +38,23 @@ async function watchMovie() {
   //   headless: 'new',
   //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
   // })
+  // const browser: Browser = await puppeteer.launch({
+  //   headless: 'new',
+  //   executablePath: puppeteer.executablePath(),
+  //   args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  // })
   const browser: Browser = await puppeteer.launch({
     headless: 'new',
-    executablePath: puppeteer.executablePath(),
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath:
+      process.env.NODE_ENV === 'production'
+        ? process.env.PUPPETEER_EXECUTABLE_PATH
+        : puppeteer.executablePath(),
+    args: [
+      '--disable-setuid-sandbox',
+      '--no-sandbox',
+      '--single-process',
+      '--no-zygote',
+    ],
   })
 
   for (let i = 0; i < 5; i++) {

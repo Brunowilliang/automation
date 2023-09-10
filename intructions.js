@@ -139,3 +139,31 @@ my package.json
     "zod": "^3.21.4"
   }
 }
+
+
+# # Usar a imagem oficial do Puppeteer
+# FROM ghcr.io/puppeteer/puppeteer:20.9.0
+
+# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true \
+#     PUPPETEER_EXECUTABLE_PATH /usr/bin/google-chrome-stable
+
+# # Definir o diretório de trabalho
+# WORKDIR /app
+
+# # Copiar o package.json e package-lock.json (se disponível)
+# COPY package*.json ./
+
+# # Mudar para o usuário root para instalar dependências
+# USER root
+
+# # Instalar as dependências do projeto
+# RUN npm ci
+
+# # Mudar de volta para o usuário padrão do Puppeteer
+# USER pptruser
+
+# # Copiar o restante dos arquivos do projeto
+# COPY . .
+
+# # Comando para executar o script
+# CMD ["npm", "run", "script"]
